@@ -14,9 +14,12 @@ class AppEnv(object):
 
     def __init__(self):
         self.app = json.loads(os.getenv('VCAP_APPLICATION', '{}'))
+        env_services = json.loads(os.getenv('VCAP_SERVICES', '{}'))
+        self.named_services = {service_name: list(map(Service, services_list)) for service_name, services_list in
+                               env_services.items()}
         self.services = [
             Service(each)
-            for services in json.loads(os.getenv('VCAP_SERVICES', '{}')).values()
+            for services in env_services.values()
             for each in services
         ]
 

@@ -43,6 +43,16 @@ def services(monkeypatch):
                     'username': 'user',
                     'password': 'pass',
                 },
+            },
+            {
+                'name': 'test-database2',
+                'label': 'webscaledb2',
+                'plan': 'free',
+                'credentials': {
+                    'url': 'https://test-service2.com/',
+                    'username': 'user2',
+                    'password': 'pass2',
+                },
             }
         ],
     }
@@ -83,6 +93,12 @@ class TestEnv:
     def test_get_credential_default(self, env):
         assert env.get_credential('missing') is None
         assert env.get_credential('missing', 'default') == 'default'
+
+    def test_named_services(self, env):
+        assert len(env.named_services['test-credentials']) == 1
+        assert len(env.named_services['test-database']) == 2
+        assert env.named_services['test-database'][0].name == 'test-database'
+        assert env.named_services['test-database'][1].name == 'test-database2'
 
 class TestService:
 
