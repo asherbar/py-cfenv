@@ -38,12 +38,11 @@ class AppEnv(object):
 
     @property
     def port(self):
-        port = (
-            os.getenv('PORT') or
-            os.getenv('CF_INSTANCE_PORT') or
-            os.getenv('VCAP_APP_PORT')
-        )
-        return int(port) if port else None
+        for key in('PORT', 'CF_INSTANCE_PORT', 'VCAP_APP_PORT'):
+            port = os.getenv(key)
+            if port:
+                return int(port)
+        return None
 
     @property
     def bind(self):
